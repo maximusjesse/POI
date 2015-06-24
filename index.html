@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html>
+<!--removed all of the unnecessary buttons-->
+  <head>
+    <link rel="stylesheet" type="text/css" href="dist/css/buttons.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="dist/css/buttons.css">
+    <style>
+    #findMe{
+        position: absolute;
+        top:1%;
+        left:10%;
+        z-index:50;
+      }
+      #update{
+        position: absolute;
+        bottom:7%;
+        left:33%;
+        z-index:50;
+      }
+      #planner{
+        position: absolute;
+        bottom:7%;
+        left:57%;
+        z-index:20;
+      }
+      #weights{
+        background: rgba(255, 255, 255, 0.8);
+        bottom:13%;
+        right:0;
+        transform: translate(0, +30%);
+        position: absolute;
+        z-index: 10;
+      }
+      #map_canvas {
+
+         height: 100%;
+        position: absolute;
+        top: 0;
+        bottom: -200px;
+        left: 0;
+        right: 0;
+        z-index: 0;
+      }
+      #container {
+        background: rgba(255, 255, 255, 0.8);
+        left:50%;
+        transform: translate(-50%, -10%);
+        position: absolute;
+        z-index: 10;
+      }
+      #selected {       
+        position:relative;
+        float:right;
+        background:rgba(255,255,255,0.8);
+        z-index:20;
+        transform: translate(0, 20px);
+      }
+      #categories {
+        background: rgba(255, 255, 255, 0.8);
+        position:absolute;
+        left:0;
+        bottom:10%;
+        z-index:20;
+        transform: translate(0, 20px);
+
+      }
+    </style>
+      <script src="https://maps.googleapis.com/maps/api/js"></script>
+      <script src="poi.js"></script>
+      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+      <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+      <script src="yelpapi.js"></script>
+      <script type="text/javascript" src="dist/js/buttons.js"></script>
+      <title>Points of Interest (POI)</title>
+  </head>
+
+  <body>
+    <div id='findMe'>
+      <a href="#" class="button button-rounded button-flat-royal" onclick="getGeolocation();">Find Me</a></div>
+    <div id='update'>
+      <a href="#" class="button button-circle button-flat-highlight" onclick="updateCategories();">Update</a></div>
+    <div id='planner'>
+      <a href="#" class="button button-circle button-flat-primary" onclick="compareSelected();">Selections</a></div>
+
+<div id='categories'>
+  <table id = "catTable" style="width:30%">
+    Categories
+    <tr>
+      <td>Active</td>
+      <td><input type="checkbox" id = "activeCheckbox" checked></td>
+      <td>Hotels/Travel</td>
+      <td><input type="checkbox" id = "hotelstravelCheckbox" checked>
+      
+    </tr>
+    <tr>
+      <td>Arts</td>
+      <td><input type="checkbox" id = "artsCheckbox" checked></td>
+      <td>Mass Media</td>
+      <td><input type="checkbox" id = "massmediaCheckbox" checked></td>
+    </tr>
+    <tr>
+      <td>Beauty</td>
+      <td><input type="checkbox" id = "beautysvcCheckbox" checked></td>
+      <td>Nightlife</td>
+      <td><input type="checkbox" id = "nightlifeCheckbox" checked></td>
+    </tr>
+    <tr>
+      <td>Food</td>
+      <td><input type="checkbox" id = "foodCheckbox" checked></td>
+      <td>Religious</td>
+      <td><input type="checkbox" id = "religiousorgsCheckbox" checked></td>
+    </tr>    
+    <tr>
+      <td>Restaurants</td>
+      <td><input type="checkbox" id = "restaurantsCheckbox" checked></td>
+      <td>Shopping</td>
+      <td><input type="checkbox" id = "shoppingCheckbox" checked></td>
+    </tr>
+    <tr>
+   
+      <td><input type="button" value = "Check All"id = "catUpdate" onclick="checkAll();"></td>
+    </tr>
+
+  </table>
+</div>
+
+    <div id='container'>
+
+      <table style="width:100%">
+   
+      <tr>
+        <td> <select id = 'selectCity'>
+          <option value='blank'></option>
+          <option value='Albuquerque, New Mexico'>Albuquerque, New Mexico</option>
+          <option value='Arlington, Texas'>Arlington, Texas</option>
+          <option value='Atlanta, Georgia'>Atlanta, Georgia</option>
+          <option value='Austin, Texas'>Austin, Texas</option>
+          <option value='Baltimore, Maryland'>Baltimore, Maryland</option>
+          <option value='Boston, Massachusetts'>Boston, Massachusetts</option>
+          <option value='Charlotte, North Carolina'>Charlotte, North Carolina</option>
+          <option value='Chicago, Illinois'>Chicago, Illinois</option>
+          <option value='Cleveland, Ohio'>Cleveland, Ohio</option>
+          <option value='Colorado Springs, Colorado'>Colorado Springs, Colorado</option>
+          <option value='Columbus, Ohio'>Columbus, Ohio</option>
+          <option value='Dallas, Texas'>Dallas, Texas</option>
+          <option value='Denver, Colorado'>Denver, Colorado</option>
+          <option value='Detroit, Michigan'>Detroit, Michigan</option>
+          <option value='El Paso, Texas'>El Paso, Texas</option>
+          <option value='Fort Worth, Texas'>Fort Worth, Texas</option>
+          <option value='Fresno, California'>Fresno, California</option>
+          <option value='Houston, Texas'>Houston, Texas</option>
+          <option value='Indianapolis, Indiana'>Indianapolis, Indiana</option>
+          <option value='Jacksonville, Florida'>Jacksonville, Florida</option>
+          <option value='Kansas , Missouri'>Kansas , Missouri</option>
+          <option value='Las Vegas, Nevada'>Las Vegas, Nevada</option>
+          <option value='Long Beach, California'>Long Beach, California</option>
+          <option value='Los Angeles, California'>Los Angeles, California</option>
+          <option value='Louisville/Jefferson, Kentucky'>Louisville/Jefferson, Kentucky</option>
+          <option value='Memphis, Tennessee'>Memphis, Tennessee</option>
+          <option value='Mesa, Arizona'>Mesa, Arizona</option>
+          <option value='Miami, Florida'>Miami, Florida</option>
+          <option value='Milwaukee, Wisconsin'>Milwaukee, Wisconsin</option>
+          <option value='Minneapolis, Minnesota'>Minneapolis, Minnesota</option>
+          <option value='Nashville-Davidson, Tennessee'>Nashville-Davidson, Tennessee</option>
+          <option value='New York City, New York'>New York City, New York</option>
+          <option value='Oakland, California'>Oakland, California</option>
+          <option value='Oklahoma , Oklahoma'>Oklahoma , Oklahoma</option>
+          <option value='Omaha, Nebraska'>Omaha, Nebraska</option>
+          <option value='Philadelphia, Pennsylvania'>Philadelphia, Pennsylvania</option>
+          <option value='Phoenix, Arizona'>Phoenix, Arizona</option>
+          <option value='Portland, Oregon'>Portland, Oregon</option>
+          <option value='Raleigh, North Carolina'>Raleigh, North Carolina</option>
+          <option value='Sacramento, California'>Sacramento, California</option>
+          <option value='San Antonio, Texas'>San Antonio, Texas</option>
+          <option value='San Diego, California'>San Diego, California</option>
+          <option value='San Francisco, California'>San Francisco, California</option>
+          <option value='San Jose, California'>San Jose, California</option>
+          <option value='Seattle, Washington'>Seattle, Washington</option>
+          <option value='Tucson, Arizona'>Tucson, Arizona</option>
+          <option value='Tulsa, Oklahoma'>Tulsa, Oklahoma</option>
+          <option value='Virginia Beach, Virginia'>Virginia Beach, Virginia</option>
+          <option value='Washington, DC'>Washington, DC</option>
+          <option value='Wichita, Kansas'>Wichita, Kansas</option>
+</select> </td>
+  <!--changed the select city function-->
+        <td> <input type="button" value="Select City" onclick="changeCity(); newSearch();"></td>
+ 
+      </tr>
+      
+      </table>
+
+    </div>
+
+    <div id='selected'>
+      <p id="selectedShow"></p>
+    </div>
+    <div id="map_canvas"></div>
+     <div id='weights'>
+      <table style="width:100%">
+        <tr>
+          <td>Number of POIs</td>
+          <td><input type="number" id="POInum" min="0" value="100"></td>
+        </tr>
+      <tr>
+        <td>Distance:</td>
+        <td><input type=range min=0 max=5 value=3 id="distanceWeight"></td>
+      </tr>
+      <tr>
+        <td>Rating:</td>
+        <td><input type=range min=0 max=5 value=3 id="ratingWeight"></td>
+ 
+      </tr>
+      <tr>
+        <td>Popularity:</td>
+        <td><input type=range min=0 max=5 value=3 id="popularityWeight"></td>
+ 
+      </tr>
+
+      </table> 
+ 
+
+    </div>
+
+  </body>
+</html>

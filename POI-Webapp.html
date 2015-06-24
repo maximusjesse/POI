@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #weights{
+        background: rgba(255, 255, 255, 0.8);
+        bottom:10%;
+        left:80%;
+        transform: translate(0, +30%);
+        position: absolute;
+        z-index: 10;
+      }
+      #map_canvas {
+
+         height: 100%;
+        position: absolute;
+        top: 0;
+        bottom: -200px;
+        left: 0;
+        right: 0;
+        z-index: 0;
+              }
+      #container {
+        background: rgba(255, 255, 255, 0.8);
+        left:50%;
+        transform: translate(-50%, -10%);
+        position: absolute;
+        z-index: 10;
+      }
+      #selected {
+        
+        
+        
+        position:relative;
+        float:right;
+        background:rgba(255,255,255,0.8);
+        z-index:20;
+        transform: translate(0, 20px);
+      }
+    </style>
+      <script src="https://maps.googleapis.com/maps/api/js"></script>
+      <script src="mapscript.js"></script>
+      <script src="mapscript.js"></script>
+ 
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+      <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+      <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+         <script src="yelpapi.js"></script>
+    </head>
+
+  <body>
+ 
+
+
+    <div id='container'>
+      <table style="width:100%">
+      <tr>
+        <td>Latitude:</td>
+        <td><input type="text" name="location" id = "getLat" Value = "0"></td>
+      </tr>
+      <tr>
+        <td>Longitude:</td>
+        <td><input type="text" name="location" id = "getLong" Value = "0"></td>
+ 
+      </tr>
+</table> 
+    
+     <input type="button" value="Get my location" onclick="getGeolocation();" align = "right">
+     <input type="button" value="Show places" onclick="plotPlaces();">
+    </div>
+    <div id='selected'>
+      <p id="selectedShow"></p>
+    </div>
+    <div id="map_canvas"></div>
+     <div id='weights'>
+      <table style="width:100%">
+      <tr>
+        <td>Distance:</td>
+        <td><input type=range min=0 max=5 value=3 id="distanceWeight"></td>
+      </tr>
+      <tr>
+        <td>Rating:</td>
+        <td><input type=range min=0 max=5 value=3 id="ratingWeight"></td>
+ 
+      </tr>
+      <tr>
+        <td>Popularity:</td>
+        <td><input type=range min=0 max=5 value=3 id="popularityWeight"></td>
+ 
+      </tr>
+      <tr>
+        <td><input type="button" value="Update" onclick="updateRatings();"></td>
+        <td><input type="button" value="get places" onclick="getPOIs();"></td>
+        <td><input type="button" value="sort" onclick="sortBase();"></td>
+
+      </tr>
+      </table> 
+ 
+
+    </div>
+  </body>
+</html>
